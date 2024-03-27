@@ -31,7 +31,7 @@
 		10A6DB1E67F091111BF66C17 /* Pods-TFSBarcodeScanner_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFSBarcodeScanner_Tests.release.xcconfig"; path = "Target Support Files/Pods-TFSBarcodeScanner_Tests/Pods-TFSBarcodeScanner_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		1508B5AFEEBDDBE5EB399699 /* Pods_TFSBarcodeScanner_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFSBarcodeScanner_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		428B4F2DEE3516F16CA7A533 /* Pods-TFSBarcodeScanner_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFSBarcodeScanner_Example.release.xcconfig"; path = "Target Support Files/Pods-TFSBarcodeScanner_Example/Pods-TFSBarcodeScanner_Example.release.xcconfig"; sourceTree = "<group>"; };
-		4A4C8D7CD677EE0F8448A797 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		4A4C8D7CD677EE0F8448A797 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		578D33A7F0ADC7428360E585 /* Pods-TFSBarcodeScanner_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFSBarcodeScanner_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TFSBarcodeScanner_Tests/Pods-TFSBarcodeScanner_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* TFSBarcodeScanner_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFSBarcodeScanner_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,8 +45,8 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		72E65BF141D24DD8F76BFC44 /* Pods_TFSBarcodeScanner_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFSBarcodeScanner_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85E296BDBCDAB052EEEE7110 /* Pods-TFSBarcodeScanner_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFSBarcodeScanner_Example.debug.xcconfig"; path = "Target Support Files/Pods-TFSBarcodeScanner_Example/Pods-TFSBarcodeScanner_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		9FB0F923F5AB5DB85EA97660 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		DC3B2B0AD645F681C13C33EE /* TFSBarcodeScanner.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = TFSBarcodeScanner.podspec; path = ../TFSBarcodeScanner.podspec; sourceTree = "<group>"; };
+		9FB0F923F5AB5DB85EA97660 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		DC3B2B0AD645F681C13C33EE /* TFSBarcodeScanner.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TFSBarcodeScanner.podspec; path = ../TFSBarcodeScanner.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +77,6 @@
 				578D33A7F0ADC7428360E585 /* Pods-TFSBarcodeScanner_Tests.debug.xcconfig */,
 				10A6DB1E67F091111BF66C17 /* Pods-TFSBarcodeScanner_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -227,6 +226,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

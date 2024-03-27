@@ -1,0 +1,6 @@
+framework module TFSBarcodeScanner {
+  umbrella header "TFSBarcodeScanner-umbrella.h"
+
+  export *
+  module * { export * }
+}

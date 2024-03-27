@@ -1,0 +1,16 @@
+PODS:
+  - TFSBarcodeScanner (0.1.0)
+
+DEPENDENCIES:
+  - TFSBarcodeScanner (from `../`)
+
+EXTERNAL SOURCES:
+  TFSBarcodeScanner:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  TFSBarcodeScanner: 2b26eb6576fa3e5df3d6eb73c3b1c8b9dd2ae69a
+
+PODFILE CHECKSUM: 6999ccf7a99df781f67d65919b12d606610029fd
+
+COCOAPODS: 1.14.3
