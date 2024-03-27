@@ -7,16 +7,16 @@
 //
 
 import UIKit
-import LuminousBarcode
+import TFSBarcodeScanner
 
 class ViewController: UIViewController {
     @IBOutlet var previewView: UIView!
-    var scanner: LuminousBarcode?
+    var scanner: TFSBarcodeScanner?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        scanner = LuminousBarcode(previewView: previewView)
+        scanner = TFSBarcodeScanner(previewView: previewView)
     }
 
     override func didReceiveMemoryWarning() {

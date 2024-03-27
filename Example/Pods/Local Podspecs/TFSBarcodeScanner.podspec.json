@@ -1,7 +1,7 @@
 {
   "name": "TFSBarcodeScanner",
   "version": "0.1.0",
-  "summary": "A short description of TFSBarcodeScanner.",
+  "summary": "Simple barcode scanner.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/T4-amitm/TFSBarcodeScanner",
   "license": {
@@ -18,5 +18,5 @@
   "platforms": {
     "ios": "10.0"
   },
-  "source_files": "TFSBarcodeScanner/Classes/**/*"
+  "source_files": "Classes/**/*.swift"
 }

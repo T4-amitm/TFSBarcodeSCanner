@@ -11,18 +11,18 @@ import Foundation
 import QuartzCore
 
 
-public enum LuminousCamera {
+public enum TFSCamera {
     case back
     case front
 }
 
 
-public enum LuminousTorchMode {
+public enum TFSTorchMode {
     case on
     case off
 }
 
-protocol LuminousBarcodeScannerProtocol {
+protocol TFSBarcodeScannerProtocol {
     func stopScanning()
 
     func isScanning() -> Bool
@@ -32,10 +32,10 @@ protocol LuminousBarcodeScannerProtocol {
 
 
 @available(iOS 10.0, *)
-open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
+open class TFSBarcodeScanner: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
     let kFocalPointOfInterestX: CGFloat = 0.5
     let kFocalPointOfInterestY: CGFloat = 0.5
-    let kErrorDomain = "LuminousBarcodeScannerError"
+    let kErrorDomain = "TFSBarcodeScannerError"
     // Error Codes
     let kErrorCodeStillImageCaptureInProgress = 1000
     let kErrorCodeSessionIsClosed = 1001
@@ -63,12 +63,12 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
     var didStartScanningBlock: (() -> Void)?
     var allowTapToFocus: Bool = false
     var preferredAutoFocusRangeRestriction: AVCaptureDevice.AutoFocusRangeRestriction!
-    private(set) var camera: LuminousCamera!
+    private(set) var camera: TFSCamera!
     var resultBlock: ([AVMetadataMachineReadableCodeObject]?) -> Void = { _ in}
     var scanRect = CGRect.zero
     var didTapToFocusBlock: ((_ point: CGPoint) -> Void)?
    
-    private var torchMode: LuminousTorchMode = .off
+    private var torchMode: TFSTorchMode = .off
     
     func defaultMetaDataObjectTypes() -> [AVMetadataObject.ObjectType] {
         var types: [AVMetadataObject.ObjectType] = [
@@ -119,7 +119,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         NotificationCenter.default.removeObserver(self)
     }
     
-    static func hasCamera(camera: LuminousCamera) -> Bool {
+    static func hasCamera(camera: TFSCamera) -> Bool {
         let position = self.devicePosition(for: camera)
         let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position)
         return (device != nil)
@@ -133,7 +133,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         return startScanningWithCamera(camera: .back, resultBlock: resultBlock, error: &error)
     }
 
-   public func startScanningWithCamera(camera: LuminousCamera, resultBlock: @escaping ([AVMetadataMachineReadableCodeObject]?) -> Void, error: inout NSError?) -> Bool {
+   public func startScanningWithCamera(camera: TFSCamera, resultBlock: @escaping ([AVMetadataMachineReadableCodeObject]?) -> Void, error: inout NSError?) -> Bool {
         if self.session != nil {
             error = NSError(domain: kErrorDomain, code: kErrorCodeSessionAlreadyActive, userInfo: [NSLocalizedDescriptionKey: "Do not start scanning while another session is in use."])
             return false
@@ -205,7 +205,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
 
     func hasOppositeCamera() -> Bool {
         let otherCamera = ScannerUtils.oppositeCameraOf(camera: self.camera)
-        return LuminousBarcode.hasCamera(camera: otherCamera)
+        return TFSBarcodeScanner.hasCamera(camera: otherCamera)
     }
 
     func getError() -> NSError? {
@@ -264,7 +264,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         }
     }
     
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         var codes = [AVMetadataMachineReadableCodeObject]()
         for metaData in metadataObjects {
             if let barCodeObject = self.capturePreviewLayer.transformedMetadataObject(for: metaData as! AVMetadataMachineReadableCodeObject) {
@@ -284,7 +284,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         self.resultBlock(codes)
     }
 
-    @objc func handleApplicationDidChangeStatusBarNotification(_ notification: Notification) {
+    public func handleApplicationDidChangeStatusBarNotification() {
         refreshVideoOrientation()
     }
 
@@ -315,7 +315,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         }
     }
 
-    @objc func applicationWillEnterForegroundNotification(_ notification: Notification) {
+    public func applicationWillEnterForegroundNotification() {
         // the torch is switched off when the app is backgrounded so we restore the
         // previous state once the app is foregrounded again
         var error: Error? = getError()
@@ -352,7 +352,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         return newSession
     }
     
-    func newCaptureDevice(with camera: LuminousCamera) -> AVCaptureDevice? {
+    func newCaptureDevice(with camera: TFSCamera) -> AVCaptureDevice? {
         var newCaptureDevice: AVCaptureDevice? = nil
         let position = Self.devicePosition(for: camera)
         let device = AVCaptureDevice.default(
@@ -377,7 +377,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         return newCaptureDevice
     }
 
-    static func devicePosition(for camera: LuminousCamera) -> AVCaptureDevice.Position {
+    static func devicePosition(for camera: TFSCamera) -> AVCaptureDevice.Position {
         switch camera {
         case .front:
             return .front
@@ -387,15 +387,16 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
     }
     
     func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationDidChangeStatusBarNotification(_:)), name: NSNotification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForegroundNotification(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationDidChangeStatusBarNotification(_:)), name: NSNotification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForegroundNotification(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
     }
+    
 
     func setupSessionQueue() {
         if privateSessionQueue != nil {
             return
         }
-        privateSessionQueue = DispatchQueue(label: "com.mikebuss.LuminousBarcodeScanner.captureSession", qos: .default, attributes: [], autoreleaseFrequency: .inherit, target: nil)
+        privateSessionQueue = DispatchQueue(label: "com.mikebuss.TFSBarcodeScanner.captureSession", qos: .default, attributes: [], autoreleaseFrequency: .inherit, target: nil)
     }
 
     func setDeviceInput(_ deviceInput: AVCaptureDeviceInput, session: AVCaptureSession) {
@@ -456,7 +457,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
     }
 
     // Torch Control
-    func setTorchMode(_ torchMode: LuminousTorchMode) {
+    func setTorchMode(_ torchMode: TFSTorchMode) {
         var error: Error? = getError()
 
         let success = setTorchMode(torchMode, error: &error)
@@ -465,7 +466,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         }
     }
 
-    func setTorchMode(_ torchMode: LuminousTorchMode, error: inout Error?) -> Bool {
+    func setTorchMode(_ torchMode: TFSTorchMode, error: inout Error?) -> Bool {
         if updateForTorchMode(torchMode, error: &error) {
             // we only update our internal state if setting the torch mode was successful
             self.torchMode = torchMode
@@ -484,9 +485,9 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         }
     }
 
-    func updateForTorchMode(_ preferredTorchMode: LuminousTorchMode, error: inout Error?) -> Bool {
+    func updateForTorchMode(_ preferredTorchMode: TFSTorchMode, error: inout Error?) -> Bool {
         let backCamera = AVCaptureDevice.default(for: .video)
-        let avTorchMode = avTorchModeForLuminousTorchMode(preferredTorchMode)
+        let avTorchMode = avTorchModeForTFSTorchMode(preferredTorchMode)
         if !(backCamera?.isTorchAvailable ?? false) || !(backCamera?.isTorchModeSupported(avTorchMode) ?? false) {
                 error = NSError(domain: kErrorDomain, 
                                 code: kErrorCodeTorchModeUnavailable,
@@ -512,7 +513,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         return input?.device.hasTorch ?? false
     }
 
-    func avTorchModeForLuminousTorchMode(_ torchMode: LuminousTorchMode) -> AVCaptureDevice.TorchMode {
+    func avTorchModeForTFSTorchMode(_ torchMode: TFSTorchMode) -> AVCaptureDevice.TorchMode {
         switch torchMode {
         case .on:
             return .on
@@ -585,7 +586,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
     }
 
     @available(iOS 11.0, *)
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if #available(iOS 11.0, *) {
             let data = photo.fileDataRepresentation()
             var image: UIImage? = nil
@@ -599,7 +600,7 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         }
     }
 
-    func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+    public func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         if photoSampleBuffer == nil {
             return
         }
@@ -616,14 +617,14 @@ open class LuminousBarcode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AV
         return stillImageOutput.isCapturingStillImage
     }
 
-    func setCamera(_ camera: LuminousCamera) {
+    func setCamera(_ camera: TFSCamera) {
         var error = getError()
         if !setCamera(camera, error: &error) {
             print("Error")
         }
     }
 
-    func setCamera(_ camera: LuminousCamera, error: inout NSError?) -> Bool {
+    func setCamera(_ camera: TFSCamera, error: inout NSError?) -> Bool {
         if camera == self.camera {
             return true
         }

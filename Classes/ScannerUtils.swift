@@ -14,7 +14,7 @@ open class ScannerUtils {
         return AVCaptureDevice.default(for: .video) != nil
     }
 
-    static func oppositeCameraOf(camera: LuminousCamera) -> LuminousCamera {
+    static func oppositeCameraOf(camera: TFSCamera) -> TFSCamera {
         switch camera {
         case .back:
             return .front
